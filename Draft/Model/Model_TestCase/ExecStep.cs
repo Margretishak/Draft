@@ -11,7 +11,7 @@ namespace Model_TestCase
 		public enum ExecType
 		{
 			Navigate = 1,
-			Write = 2,
+			Input = 2,
 			Click = 4
 		}
 
@@ -20,5 +20,9 @@ namespace Model_TestCase
 		public int WaitPeriod { get; set; }
 
 		public ExecType ExecDataType { get; set; }
+
+		public List<Element> InputElements { get; set; }
+		public List<Element> ExpectedElements { get; set; }
+		public List<Element> ActualElements { get; set; }
 	}
 }

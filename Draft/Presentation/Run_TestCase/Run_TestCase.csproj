@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="TestCases.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Business\Business_TestCase\Business_TestCase.csproj">

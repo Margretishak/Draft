@@ -22,6 +22,9 @@ namespace Model_TestCase
 				return this._ExecutionSteps;
 			}
 		}
+
+		public bool Succeeded { get; set; }
+		public string Comment { get; set; }
 		#endregion
 
 		public TestCase()
