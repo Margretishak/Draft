@@ -10,6 +10,19 @@ namespace Run_TestCase
 	{
 		static void Main(string[] args)
 		{
+			Start();
+
+			Console.Read();
+		}
+
+		private static void Start()
+		{
+			List<Model_TestCase.TestCase> testCases = Business_TestCase.Manager.ReadTestCases();
+
+			foreach (var item in testCases)
+			{
+				Console.WriteLine($"Test Case Name: {item.Name}");
+			}
 		}
 	}
 }

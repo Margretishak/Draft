@@ -10,17 +10,23 @@ namespace Data_TestCase
 {
 	internal class ExcelMgmt
 	{
-		public static void ReadFromExcel()
+		public static List<TestCase> ReadFromExcel()
 		{
+			List<TestCase> testCases;
+
 			using (var package = new ExcelPackage())
 			{
 				var xlFile = System.IO.File.Open(Properties.Settings.Default.ExcelFileName, System.IO.FileMode.Open);
 				package.Load(xlFile);
 
-				List<TestCase> testCases = readTestCaseSheet(package);
+				testCases = readTestCaseSheet(package);
 
 				readExecDataSheet(package, testCases);
+
+				readElementSheet(package, testCases);
 			}
+
+			return testCases;
 		}
 
 		private static bool readData(ExcelPackage package, int sheetNo, int r, int c, out string data)
@@ -96,7 +102,7 @@ namespace Data_TestCase
 
 				exist = readData(package, 2, r, 2, out value);
 
-				if (exist)
+				if (!exist)
 				{
 					r++;
 					continue;
@@ -157,13 +163,57 @@ namespace Data_TestCase
 								where step.ID == value
 								select step).SingleOrDefault();
 
-
+				//if step ID not exist in step sheet 2
 				if (execStep.ID == string.Empty)
 				{
 					continue;
 				}
 
-				//TODO: complete the read from sheet3
+				exist = readData(package, 3, r, 2, out value);
+
+				if (exist)
+				{
+					element.ElementCategory = (Element.ElementCategories)Enum.Parse(typeof(Element.ElementCategories), value);
+				}
+				else
+				{
+					continue;
+				}
+
+				readData(package, 3, r, 3, out value);
+				element.ID = value;
+
+				readData(package, 3, r, 4, out value);
+				element.Name = value;
+
+				readData(package, 3, r, 5, out value);
+				element.CSS = value;
+
+				readData(package, 3, r, 6, out value);
+				element.XPath = value;
+
+				//if no identifier exist do not proceed
+				if (string.IsNullOrEmpty(element.ID) && string.IsNullOrEmpty(element.Name) && string.IsNullOrEmpty(element.CSS) && string.IsNullOrEmpty(element.XPath))
+				{
+					continue;
+				}
+
+				readData(package, 3, r, 7, out value);
+				element.Value = value;
+
+				readData(package, 3, r, 8, out value);
+				element.ElementType = (Element.ElementTypes)Enum.Parse(typeof(Element.ElementTypes), value); ;
+
+				//add element to its respective category in the step
+				switch (element.ElementCategory)
+				{
+					case Element.ElementCategories.Input:
+						execStep.InputElements.Add(element);
+						break;
+					case Element.ElementCategories.Expected:
+						execStep.ExpectedElements.Add(element);
+						break;
+				}
 
 				r++;
 			}
