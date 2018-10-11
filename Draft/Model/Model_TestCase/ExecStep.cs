@@ -12,7 +12,15 @@ namespace Model_TestCase
 		{
 			Navigate = 1,
 			Input = 2,
-			Click = 4
+			Click = 4,
+			Assert = 8
+		}
+
+		public ExecStep()
+		{
+			this.InputElements = new List<Element>();
+			this.ExpectedElements = new List<Element>();
+			this.ActualElements = new List<Element>();
 		}
 
 		public string ID { get; set; }

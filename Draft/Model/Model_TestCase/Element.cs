@@ -12,7 +12,8 @@ namespace Model_TestCase
 		{
 			TextBox = 1,
 			Button = 2,
-			DropDownList = 4
+			DropDownList = 4,
+			Div = 8
 		}
 
 		public enum ElementCategories {

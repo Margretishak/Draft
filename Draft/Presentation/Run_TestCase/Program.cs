@@ -12,6 +12,7 @@ namespace Run_TestCase
 		{
 			Start();
 
+			Console.WriteLine("Press any key to exit...");
 			Console.Read();
 		}
 
@@ -21,7 +22,11 @@ namespace Run_TestCase
 
 			foreach (var item in testCases)
 			{
-				Console.WriteLine($"Test Case Name: {item.Name}");
+				Console.WriteLine($"Test Case Name: {item.Name}, {item.ExecutionSteps.Count} steps");
+
+				Business_TestCase.Manager.RunTestCases();
+
+				Console.WriteLine("---------------------------");
 			}
 		}
 	}

@@ -109,7 +109,7 @@ namespace Data_TestCase
 				}
 
 				TestCase testCase = testCases.SingleOrDefault(t => t.Name.ToLower() == value.ToLower());
-				if (string.IsNullOrWhiteSpace(testCase.Name))
+				if (testCase == null || string.IsNullOrWhiteSpace(testCase.Name))
 				{
 					r++;
 					continue;
@@ -164,7 +164,7 @@ namespace Data_TestCase
 								select step).SingleOrDefault();
 
 				//if step ID not exist in step sheet 2
-				if (execStep.ID == string.Empty)
+				if (execStep == null || execStep.ID == string.Empty)
 				{
 					continue;
 				}
@@ -195,6 +195,7 @@ namespace Data_TestCase
 				//if no identifier exist do not proceed
 				if (string.IsNullOrEmpty(element.ID) && string.IsNullOrEmpty(element.Name) && string.IsNullOrEmpty(element.CSS) && string.IsNullOrEmpty(element.XPath))
 				{
+					r++;
 					continue;
 				}
 
@@ -202,7 +203,7 @@ namespace Data_TestCase
 				element.Value = value;
 
 				readData(package, 3, r, 8, out value);
-				element.ElementType = (Element.ElementTypes)Enum.Parse(typeof(Element.ElementTypes), value); ;
+				element.ElementType = (Element.ElementTypes)Enum.Parse(typeof(Element.ElementTypes), value);
 
 				//add element to its respective category in the step
 				switch (element.ElementCategory)
