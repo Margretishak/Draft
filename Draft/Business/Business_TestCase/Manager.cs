@@ -34,38 +34,64 @@ namespace Business_TestCase
 
 		private static void runTestCase(Model_TestCase.TestCase testCase)
 		{
+			Console.WriteLine($"Test Case {testCase.Name} started");
+
 			IWebElement query = null;
 
-			using (IWebDriver driver = new ChromeDriver())
+			IWebDriver driver = null;
+
+			switch (testCase.Browser)
 			{
-				foreach (var step in testCase.ExecutionSteps)
-				{
-					switch (step.ExecDataType)
-					{
-						case Model_TestCase.ExecStep.ExecType.Navigate:
-							driver.Navigate().GoToUrl(step.URL);
-							break;
-						case Model_TestCase.ExecStep.ExecType.Input:
-							query = executeInputStep(driver, step);
-							break;
-						case Model_TestCase.ExecStep.ExecType.Click:
-							query.Submit();
-							break;
-						case Model_TestCase.ExecStep.ExecType.Assert:
-							var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(step.WaitPeriod));
-							wait.Until(d => d.Title.StartsWith("linkdev", StringComparison.OrdinalIgnoreCase));
-							break;
-						default:
-							break;
-					}
-				}
-				
-
-				
-
-				
-				Console.WriteLine("Page title is: " + driver.Title);
+				case TestCase.BrowserType.Chrome:
+					driver = new ChromeDriver();
+					break;
+				case TestCase.BrowserType.IE:
+					driver = new InternetExplorerDriver();
+					break;
+				default:
+					driver = new ChromeDriver();
+					break;
 			}
+
+			int counter = 1;
+
+			foreach (var step in testCase.ExecutionSteps)
+			{
+				Console.WriteLine($"\t{counter++}. step {step.ID} started");
+
+				switch (step.ExecDataType)
+				{
+					case Model_TestCase.ExecStep.ExecType.Navigate:
+						driver.Navigate().GoToUrl(step.URL);
+						break;
+					case Model_TestCase.ExecStep.ExecType.Input:
+						query = executeInputStep(driver, step);
+						break;
+					case Model_TestCase.ExecStep.ExecType.Click:
+						query.Submit();
+						break;
+					case Model_TestCase.ExecStep.ExecType.Assert:
+						var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(step.WaitPeriod));
+						try
+						{
+							testCase.Succeeded = wait.Until(d => findElementByIdentifier(d, step.ExpectedElements[0]).Text.ToLower().Contains(step.ExpectedElements[0].Value.ToLower()));
+						}
+						catch (OpenQA.Selenium.WebDriverTimeoutException timeoutEx)
+						{
+							testCase.Comment = timeoutEx.Message;
+							testCase.Succeeded = false;
+						}
+						
+						break;
+				}
+
+				Console.WriteLine($"\t{counter++}. step {step.ID} ended");
+			}
+
+			Console.WriteLine($"Test Case {testCase.Name} result: {testCase.Succeeded}, Comment: {testCase.Comment}");
+
+			driver.Dispose();
+			driver = null;
 		}
 
 		private static IWebElement executeInputStep(IWebDriver driver, ExecStep step)

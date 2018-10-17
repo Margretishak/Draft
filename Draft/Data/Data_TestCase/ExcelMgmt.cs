@@ -73,6 +73,9 @@ namespace Data_TestCase
 				readData(package, 1, r, 2, out data);
 				testCase.Description = data;
 
+				readData(package, 1, r, 3, out data);
+				testCase.Browser = (TestCase.BrowserType)Enum.Parse(typeof(TestCase.BrowserType), data);
+
 				testCases.Add(testCase);
 
 				r++;

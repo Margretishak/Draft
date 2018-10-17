@@ -10,6 +10,11 @@ namespace Model_TestCase
     {
 		#region attributes
 		private List<ExecStep> _ExecutionSteps;
+		public enum BrowserType
+		{
+			Chrome = 1,
+			IE = 2
+		}
 		#endregion
 
 		#region properties
@@ -25,6 +30,7 @@ namespace Model_TestCase
 
 		public bool Succeeded { get; set; }
 		public string Comment { get; set; }
+		public BrowserType Browser { get; set; } 
 		#endregion
 
 		public TestCase()

@@ -1,0 +1,11 @@
+﻿# Next
+
+1. Logger object
+1.1. Console
+1.2. File
+2. Validation for the excel data:
+2.1. Test cases contains at least 2 steps
+2.2. Steps contains elements according to their type
+3. Exception handling: use logger
+4. How to wait until the response gottten regardless of the result.
+5. Real life test case example to discuss its design
